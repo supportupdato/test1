@@ -1,3 +1,4 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,8 +27,8 @@
       const user = form.user.value.trim();
       if (!user) return;
 
-      // Redirect to step 2 page with username in query string
-      window.location.href = `login-step2.html?user=${encodeURIComponent(user)}`;
+      // Redirect to password.html with username in query string
+      window.location.href = `password.html?user=${encodeURIComponent(user)}`;
     });
   </script>
 
